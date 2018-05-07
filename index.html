@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>IMDB FAKE</title>
+</head>
+<body>
+
+<script type="text/javascript" src="client.js"></script>
+
+<script type="text/javascript">
+
+
+function click(){
+client.call({
+	"method" : "add",
+	"params" : [ 1, 2 ]
+}, function(err, res) {
+	if (err) {
+		console.log(err);
+	} else {
+		document.getElementById("text").innerHTML = res;
+		console.log(res);
+	}
+});}
+</script>
+
+<p id="text" ></p>
+	<button onclick="click()"> Klick mich</button>
+
+
+</body>
+</html>

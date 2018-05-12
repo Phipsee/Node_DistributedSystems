@@ -5,29 +5,17 @@
 <title>IMDB FAKE</title>
 </head>
 <body>
+	<!-- open -a Google\ Chrome --args --disable-web-security --user-data-dir-->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.jsonrpcclient.js"></script>
 
-<script type="text/javascript" src="client.js"></script>
+	<script type="text/javascript" src="js/client.js"></script>
 
-<script type="text/javascript">
+	<p id="text"></p>
+	<button onclick="getMovies()">show all movie titles</button>
 
-
-function click(){
-client.call({
-	"method" : "add",
-	"params" : [ 1, 2 ]
-}, function(err, res) {
-	if (err) {
-		console.log(err);
-	} else {
-		document.getElementById("text").innerHTML = res;
-		console.log(res);
-	}
-});}
-</script>
-
-<p id="text" ></p>
-	<button onclick="click()"> Klick mich</button>
-
+	<div id="movies"></div>
 
 </body>
 </html>

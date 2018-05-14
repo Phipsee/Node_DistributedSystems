@@ -1,7 +1,6 @@
 var username = 'hugo'
 
 function receiveMsg(event) {
-	console.log(event.data);
 	addToChatHistory(JSON.parse(event.data));
 }
 
@@ -29,15 +28,21 @@ function sendMsg(msg) {
 }
 
 function addToChatHistory(msgs) {
+
 	for (i = 0; i < msgs.length; i++) {
 		if (msgs[i].type === "login") {
 			showChat();
 		}
-		
+
 		if (msgs[i].type === "failed") {
 			showError();
 			return;
 		}
+		if (msgs[i].type === undefined) {
+			updateUsers(msgs);
+			return;
+		}
+
 
 		var text = "[" + new Date(msgs[i].date).toLocaleString() + "]"
 				+ msgs[i].user + ": " + msgs[i].text;
@@ -53,8 +58,20 @@ function showChat() {
 	$("#chatContainer").fadeIn();
 }
 
-function showError(){
+function showError() {
 	$("#usernameError").html('username already taken');
+}
+
+function updateUsers(users) {
+	console.log(users);
+	$("#onlineUsers").empty();
+	for (i = 0; i < users.length; i++) {
+		var text = users[i];
+		var para = document.createElement("p");
+		var t = document.createTextNode(text);
+		para.appendChild(t);
+		document.getElementById("onlineUsers").appendChild(para);
+	}
 }
 
 $(function() {

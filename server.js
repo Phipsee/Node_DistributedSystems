@@ -85,7 +85,7 @@ wsServer.on('request', function(request) {
 			var msg = JSON.parse(message.utf8Data);
 			if (msg.type === "login") {
 				var responseMsg = addUser(msg.user, this);
-				connection.sendUTF(JSON.stringify([ responseMsg ]));
+				forwardMsg(JSON.stringify([ responseMsg ]));
 			} else {
 				addToChatHistory(msg);
 				forwardMsg(JSON.stringify([ msg ]));
@@ -95,7 +95,7 @@ wsServer.on('request', function(request) {
 
 	connection.on('close', function(reasonCode, description) {
 		removeUser(connection);
-				
+
 	});
 });
 
@@ -110,7 +110,7 @@ function addUser(user, connection) {
 		user : "system",
 		date : Date.now()
 	};
-	
+
 	for (i = 0; i < users.length; i++) {
 		if (users[i].user === user) {
 			loginMsg.type = "failed"
@@ -122,21 +122,23 @@ function addUser(user, connection) {
 		user : user,
 		connection : connection
 	});
+	sendUsersOnline();
 	return loginMsg;
 }
 
 function removeUser(connection) {
 	for (i = 0; i < users.length; i++) {
-		
-		if(users[i].user == connection.userName){
+
+		if (users[i].user == connection.userName) {
 			var msg = {
-					type : "message",
-					text : users[i].user+" left",
-					user : "system",
-					date : Date.now()
-				};
+				type : "message",
+				text : users[i].user + " left",
+				user : "system",
+				date : Date.now()
+			};
 			forwardMsg(JSON.stringify([ msg ]))
 			users = users.splice(i, 1);
+			sendUsersOnline();
 		}
 	}
 }
@@ -145,4 +147,13 @@ function forwardMsg(msg) {
 	for (i = 0; i < users.length; i++) {
 		users[i].connection.sendUTF(msg);
 	}
+}
+
+function sendUsersOnline() {
+	var tmpUsers = [];
+	for(i = 0; i<users.length; i++){
+		tmpUsers.push(users[i].user);
+	}
+		
+	forwardMsg(JSON.stringify(tmpUsers));
 }
